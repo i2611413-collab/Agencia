@@ -1,0 +1,3 @@
+-- Datos iniciales opcionales para MOBBLOG INTELLIGENCE.
+-- Intencionalmente vacío: no insertar prospectos ficticios en producción.
+-- Si se necesitan datos de demostración, agregarlos en un entorno de pruebas.
