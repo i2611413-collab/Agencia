@@ -2,7 +2,7 @@
 
 **Sistema inteligente de diagnóstico, asesoramiento estratégico y apoyo a la conversión comercial para una agencia de marketing digital.**
 
-> Estado: versión inicial de documentación y diseño. El prototipo, la integración del agente y el modelo predictivo están pendientes de implementación y validación.
+> Estado: El proyecto cuenta con una primera experimentación de Machine Learning utilizando el conjunto de datos público Lead Scoring de X Education. Se entrenó y evaluó un modelo de Regresión Logística, cuyos resultados y artefactos experimentales se encuentran en proceso de documentación e integración. La integración del agente conversacional, la conexión con MySQL y la validación del modelo con datos reales de MOBBLOG Digital permanecen pendientes.
 
 ## 1. Problema
 
