@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1b32">
+<title>MOBBLOG INTELLIGENCE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+:root{
+  --navy:#0b1b32;--navy-2:#132944;--orange:#f47721;--paper:#f3f5f8;
+  --white:#fff;--ink:#172334;--muted:#738095;--line:#e5e9ef;
+  --green:#16845b;--green-bg:#e8f6ef;--amber:#9b6814;--amber-bg:#fff5df;
+  --shadow:0 8px 28px rgba(18,35,58,.06);--radius:16px
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 'DM Sans',Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}
+.sidebar{background:var(--navy);color:#fff;padding:25px 16px;display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;height:100vh}
+.brand{padding:3px 12px 27px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand-mark{font:800 18px/1.2 Manrope,sans-serif;letter-spacing:.5px}
+.brand-mark span{color:var(--orange)}
+.brand small{display:block;color:#aab7c8;font-size:11px;letter-spacing:1.4px;margin-top:7px}
+.nav-label{color:#8292a8;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:24px 12px 9px;text-transform:uppercase}
+.nav{display:grid;gap:5px}
+.nav button{width:100%;border:0;background:transparent;color:#c5cfdb;padding:11px 12px;border-radius:10px;text-align:left;display:flex;align-items:center;gap:12px;font-weight:600;transition:.18s}
+.nav button:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav button.active{background:rgba(244,119,33,.16);color:#fff;box-shadow:inset 3px 0 var(--orange)}
+.nav .ico{width:20px;text-align:center;font-size:16px;opacity:.95}
+.side-bottom{margin-top:auto;padding:16px 12px 3px;border-top:1px solid rgba(255,255,255,.12);color:#94a4b8;font-size:11px}
+.side-bottom strong{display:block;color:#e6ebf2;font-size:12px;margin-bottom:3px}
+.workspace{min-width:0}
+.topbar{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;gap:18px}
+.crumb{color:var(--muted);font-size:12px}.crumb strong{color:var(--ink);font-weight:700}
+.top-actions{display:flex;align-items:center;gap:15px}
+.db-pill{display:flex;align-items:center;gap:8px;background:#f5f7fa;border:1px solid var(--line);border-radius:30px;padding:8px 12px;color:#59677a;font-size:12px}
+.dot{width:7px;height:7px;border-radius:50%;background:#d59a2c}
+.dot.ok{background:#21a36f;box-shadow:0 0 0 3px #e1f4eb}
+.avatar{width:34px;height:34px;border-radius:50%;background:#e9edf3;color:var(--navy);display:grid;place-items:center;font-weight:800}
+.content{max-width:1600px;margin:auto;padding:30px 34px 48px}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:23px}
+.eyebrow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:6px}
+h1,h2,h3,p{margin-top:0}
+h1{font:800 25px/1.25 Manrope,sans-serif;letter-spacing:-.5px;margin-bottom:5px}
+.page-head p{margin:0;color:var(--muted);font-size:13px}
+.date-note{color:var(--muted);font-size:12px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.metric{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 19px;box-shadow:var(--shadow);min-width:0}
+.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;font-weight:600}
+.metric-icon{width:32px;height:32px;border-radius:10px;background:#f1f4f8;display:grid;place-items:center;font-size:15px}
+.metric b{display:block;font:800 27px Manrope,sans-serif;margin-top:11px;letter-spacing:-.7px}
+.metric small{display:block;color:#9aa4b2;font-size:11px;margin-top:3px}
+.layout-main{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:17px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.panel-head h2{font:700 15px Manrope,sans-serif;margin:0}
+.panel-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:30px;padding:5px 9px;background:#f3f5f8;color:#647186;font-size:10px;font-weight:700}
+.pill.orange{background:#fff0e6;color:#b85b19}
+.chat-panel{padding:0;overflow:hidden}
+.chat-head{padding:19px 21px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.agent-id{display:flex;align-items:center;gap:11px}
+.agent-icon{width:39px;height:39px;border-radius:12px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:18px}
+.agent-id h2{font:700 15px Manrope;margin:0}
+.agent-id small{color:var(--green);font-size:11px}
+#messages{height:315px;overflow:auto;padding:18px 20px;background:#fbfcfd}
+.msg{padding:11px 13px;margin:8px 0;border-radius:12px;max-width:88%;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
+.msg.user{background:#eaf0f8;margin-left:auto;border:1px solid #dfe7f1;border-bottom-right-radius:4px}
+.msg.assistant{background:#f0f3f6;border:1px solid #e9edf2;border-bottom-left-radius:4px}
+.chat-compose{padding:15px 18px 12px;border-top:1px solid var(--line)}
+.compose-row{display:flex;gap:9px;align-items:center}
+.compose-row input{flex:1;min-width:0;border:1px solid #dce2e9;border-radius:10px;padding:12px 13px;outline:none;background:#fbfcfd}
+.compose-row input:focus,.field input:focus,.field textarea:focus{border-color:#f2a16b;box-shadow:0 0 0 3px #fff0e6}
+.primary{background:var(--orange);color:#fff;border:0;border-radius:10px;padding:11px 17px;font-weight:700;transition:.18s}
+.primary:hover{background:#df6818}
+.chat-foot{font-size:10px;color:#9aa4b2;margin:8px 2px 0}
+.service-list{display:grid;gap:11px}
+.service{border:1px solid var(--line);border-radius:12px;padding:13px}
+.service-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.service-code{font:800 12px Manrope;color:var(--navy);background:#eef2f7;border-radius:7px;padding:5px 8px}
+.service strong{font-size:13px}
+.service p{font-size:11px;color:var(--muted);margin:6px 0 0}
+.service-price{font:800 15px Manrope;color:var(--ink);white-space:nowrap}
+.notice{margin-top:13px;padding:11px 12px;border-radius:10px;background:var(--amber-bg);color:var(--amber);font-size:11px;line-height:1.5}
+.recent-panel{margin-top:17px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
+th{text-align:left;color:#8792a2;font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;padding:11px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px 10px;border-bottom:1px solid #eff1f4;color:#465367}
+tbody tr:last-child td{border-bottom:0}
+.empty{padding:20px;text-align:center;color:var(--muted);font-size:12px}
+.section-panel{margin-bottom:17px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field label{display:block;color:#667386;font-size:11px;font-weight:700;margin-bottom:5px}
+.field input,.field textarea{width:100%;border:1px solid #dce2e9;border-radius:9px;padding:11px 12px;outline:none;background:#fff;color:var(--ink)}
+.field textarea{min-height:86px;resize:vertical}
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:16px}
+.status-text{font-size:11px;color:var(--muted)}
+.module-placeholder{min-height:260px;display:grid;place-items:center;text-align:center;padding:35px}
+.module-placeholder .big-ico{font-size:30px;margin-bottom:12px}
+.module-placeholder h2{font:700 18px Manrope;margin-bottom:7px}
+.module-placeholder p{color:var(--muted);font-size:13px;max-width:440px;margin:0}
+.hidden{display:none!important}
+@media(max-width:1100px){.app{grid-template-columns:215px minmax(0,1fr)}.content{padding:25px 22px}.topbar{padding:0 22px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.layout-main{grid-template-columns:1fr}}
+@media(max-width:720px){.app{display:block}.sidebar{position:relative;height:auto;min-height:0;padding:14px 13px}.brand{padding:5px 8px 13px}.brand-mark{font-size:16px}.brand small{margin-top:3px}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow-x:auto;padding-top:12px;gap:6px}.nav button{width:auto;white-space:nowrap;padding:9px 11px;font-size:11px}.nav .ico{width:auto}.topbar{height:58px;padding:0 16px}.content{padding:22px 14px 35px}.page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:22px}.metrics{gap:9px}.metric{padding:14px}.metric b{font-size:23px}.metric-top{font-size:11px}.panel{padding:16px}.chat-panel{padding:0}.chat-head{padding:15px}.form-grid{grid-template-columns:1fr}.db-pill{font-size:10px;padding:7px 9px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">MOBBLOG <span>INTELLIGENCE</span></div><small>COMMERCIAL OPERATIONS</small></div>
+    <div class="nav-label">Espacio de trabajo</div>
+    <nav class="nav" aria-label="Navegación principal">
+      <button class="active" data-page="home" onclick="showPage('home',this)"><span class="ico">⌂</span>Inicio</button>
+      <button data-page="chatpage" onclick="showPage('chatpage',this)"><span class="ico">✳</span>Agente IA</button>
+      <button data-page="prospects" onclick="showPage('prospects',this)"><span class="ico">◎</span>Prospectos</button>
+      <button data-page="diagnostics" onclick="showPage('diagnostics',this)"><span class="ico">⌕</span>Diagnósticos</button>
+      <button data-page="proposals" onclick="showPage('proposals',this)"><span class="ico">▤</span>Propuestas</button>
+      <button data-page="clients" onclick="showPage('clients',this)"><span class="ico">♧</span>Clientes</button>
+      <button data-page="analytics" onclick="showPage('analytics',this)"><span class="ico">▥</span>Analítica</button>
+      <button data-page="catalog" onclick="showPage('catalog',this)"><span class="ico">▦</span>Catálogo</button>
+      <button data-page="settings" onclick="showPage('settings',this)"><span class="ico">⚙</span>Configuración</button>
+    </nav>
+    <div class="side-bottom"><strong>MOBBLOG Digital</strong>Sistema interno de inteligencia comercial</div>
+  </aside>
+
+  <div class="workspace">
+    <header class="topbar">
+      <div class="crumb">MOBBLOG / <strong id="breadcrumb">Inicio</strong></div>
+      <div class="top-actions"><div class="db-pill"><span class="dot" id="dbdot"></span><span id="dbstate">Comprobando conexión…</span></div><div class="avatar" aria-label="Usuario">M</div></div>
+    </header>
+
+    <main class="content">
+      <section id="page-home" class="page">
+        <div class="page-head"><div><div class="eyebrow">Centro de operaciones</div><h1>Visión general</h1><p>Actividad comercial y oportunidades de MOBBLOG Digital.</p></div><div class="date-note">Panel de gestión comercial</div></div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-top"><span>Prospectos registrados</span><span class="metric-icon">◎</span></div><b id="mProspects">—</b><small>Total en la base de datos</small></div>
+          <div class="metric"><div class="metric-top"><span>Conversaciones</span><span class="metric-icon">▤</span></div><b id="mConversations">—</b><small>Interacciones registradas</small></div>
+          <div class="metric"><div class="metric-top"><span>Propuestas</span><span class="metric-icon">↗</span></div><b id="mProposals">—</b><small>Propuestas comerciales</small></div>
+          <div class="metric"><div class="metric-top"><span>Conversiones</span><span class="metric-icon">✓</span></div><b id="mWon">—</b><small>Oportunidades ganadas</small></div>
+        </div>
+        <div class="layout-main">
+          <section class="panel chat-panel">
+            <div class="chat-head"><div class="agent-id"><div class="agent-icon">✳</div><div><h2>Agente comercial MOBBLOG</h2><small>● Disponible para atender consultas</small></div></div><span class="pill orange">ASISTENTE</span></div>
+            <div id="messages" aria-live="polite"><div class="msg assistant">¡Hola! Soy el asistente comercial de MOBBLOG Digital. ¿Qué negocio tienes y qué te gustaría conseguir?</div></div>
+            <div class="chat-compose"><div class="compose-row"><input id="message" aria-label="Escribe tu consulta" placeholder="Escribe un mensaje…" onkeydown="if(event.key==='Enter')send()"><button class="primary" onclick="send()">Enviar ↗</button></div><div class="chat-foot">Las conversaciones se registran en la base de datos configurada.</div></div>
+          </section>
+          <aside class="panel">
+            <div class="panel-head"><div><h2>Servicios WebExpress</h2><div class="panel-sub">Catálogo comercial MOBBLOG</div></div><span class="pill">3 SERVICIOS</span></div>
+            <div class="service-list">
+              <div class="service"><div class="service-top"><span class="service-code">XW4</span><span class="service-price">S/ 399</span></div><strong>Landing page · 4 secciones</strong><p>Presencia digital esencial para presentar un negocio.</p></div>
+              <div class="service"><div class="service-top"><span class="service-code">XW6</span><span class="service-price">S/ 650</span></div><strong>Landing page · 6 secciones</strong><p>Una página comercial con mayor espacio para contenidos.</p></div>
+              <div class="service"><div class="service-top"><span class="service-code">XW+</span><span class="service-price">Cotizar</span></div><strong>Sitio web comercial</strong><p>Proyecto completo, según alcance y requerimientos.</p></div>
+            </div>
+            <div class="notice">Agente inicial basado en reglas. La integración con IA generativa y el modelo predictivo forman parte de las siguientes etapas.</div>
+          </aside>
+        </div>
+        <section class="panel recent-panel"><div class="panel-head"><div><h2>Oportunidades recientes</h2><div class="panel-sub">Últimos prospectos registrados</div></div><button class="primary" onclick="goProspects()">Ver prospectos</button></div><div id="recent" class="table-wrap"><div class="empty">Cargando registros…</div></div></section>
+      </section>
+
+      <section id="page-chatpage" class="page hidden">
+        <div class="page-head"><div><div class="eyebrow">Atención y calificación</div><h1>Agente IA</h1><p>Espacio de conversación con el asistente comercial.</p></div></div>
+        <section class="panel chat-panel"><div class="chat-head"><div class="agent-id"><div class="agent-icon">✳</div><div><h2>Agente comercial MOBBLOG</h2><small>● Disponible para atender consultas</small></div></div><span class="pill orange">ASISTENTE</span></div><div id="messages-copy" class="hidden"></div><div id="chat-placeholder" class="empty">La conversación activa se mantiene en Inicio. Continúa allí para enviar mensajes.</div><div class="chat-compose"><button class="primary" onclick="showPage('home',document.querySelector('[data-page=home]'))">Volver a la conversación</button></div></section>
+      </section>
+
+      <section id="page-prospects" class="page hidden">
+        <div class="page-head"><div><div class="eyebrow">Desarrollo comercial</div><h1>Prospectos</h1><p>Registra y consulta las oportunidades comerciales.</p></div></div>
+        <section class="panel section-panel"><div class="panel-head"><div><h2>Registrar prospecto</h2><div class="panel-sub">Completa los datos de contacto y del negocio.</div></div><span class="pill orange">NUEVO REGISTRO</span></div>
+          <div class="form-grid">
+            <div><div class="field"><label for="pname">Nombre completo</label><input id="pname" autocomplete="name"></div><div class="field"><label for="pemail">Correo electrónico</label><input id="pemail" type="email" autocomplete="email"></div><div class="field"><label for="pphone">Teléfono</label><input id="pphone" autocomplete="tel"></div></div>
+            <div><div class="field"><label for="pbusiness">Nombre del negocio</label><input id="pbusiness"></div><div class="field"><label for="psector">Sector</label><input id="psector"></div><div class="field"><label for="pgoal">Objetivo comercial</label><textarea id="pgoal"></textarea></div></div>
+          </div>
+          <div class="form-actions"><button class="primary" onclick="createProspect()">Guardar prospecto</button><span id="presult" class="status-text" role="status"></span></div>
+        </section>
+        <section class="panel"><div class="panel-head"><div><h2>Listado de prospectos</h2><div class="panel-sub">Registros almacenados en TiDB.</div></div><button class="primary" onclick="loadProspects()">Actualizar</button></div><div id="plist" class="table-wrap"><div class="empty">Cargando registros…</div></div></section>
+      </section>
+
+      <section id="page-diagnostics" class="page hidden"><div class="page-head"><div><div class="eyebrow">Evaluación digital</div><h1>Diagnósticos</h1><p>Seguimiento de evaluaciones de presencia y madurez digital.</p></div></div><div class="panel module-placeholder"><div><div class="big-ico">⌕</div><h2>Módulo de diagnósticos</h2><p>La sección visual está preparada. La conexión funcional dependerá de los endpoints y procesos de diagnóstico que incorporemos al backend.</p></div></div></section>
+      <section id="page-proposals" class="page hidden"><div class="page-head"><div><div class="eyebrow">Gestión de ofertas</div><h1>Propuestas</h1><p>Consulta y administra las propuestas comerciales.</p></div></div><div class="panel module-placeholder"><div><div class="big-ico">▤</div><h2>Módulo de propuestas</h2><p>Interfaz preparada para integrar el flujo de propuestas existente en la API.</p></div></div></section>
+      <section id="page-clients" class="page hidden"><div class="page-head"><div><div class="eyebrow">Cartera comercial</div><h1>Clientes</h1><p>Vista de clientes y relaciones comerciales.</p></div></div><div class="panel module-placeholder"><div><div class="big-ico">♧</div><h2>Módulo de clientes</h2><p>Se habilitará al definir el flujo de conversión de prospectos a clientes.</p></div></div></section>
+      <section id="page-analytics" class="page hidden"><div class="page-head"><div><div class="eyebrow">Inteligencia comercial</div><h1>Analítica</h1><p>Indicadores para comprender el rendimiento comercial.</p></div></div><div class="panel module-placeholder"><div><div class="big-ico">▥</div><h2>Módulo de analítica</h2><p>Los indicadores actuales se muestran en Inicio. Aquí podremos ampliar gráficos y análisis cuando existan métricas disponibles.</p></div></div></section>
+      <section id="page-catalog" class="page hidden"><div class="page-head"><div><div class="eyebrow">Oferta comercial</div><h1>Catálogo</h1><p>Servicios y productos de MOBBLOG Digital.</p></div></div><div class="panel"><div class="panel-head"><div><h2>WebExpress</h2><div class="panel-sub">Servicios actualmente definidos</div></div></div><div class="service-list"><div class="service"><div class="service-top"><span class="service-code">XW4</span><span class="service-price">S/ 399</span></div><strong>Landing page de 4 secciones</strong></div><div class="service"><div class="service-top"><span class="service-code">XW6</span><span class="service-price">S/ 650</span></div><strong>Landing page de 6 secciones</strong></div><div class="service"><div class="service-top"><span class="service-code">XW+</span><span class="service-price">Por cotizar</span></div><strong>Sitio web comercial completo</strong></div></div></div></section>
+      <section id="page-settings" class="page hidden"><div class="page-head"><div><div class="eyebrow">Sistema</div><h1>Configuración</h1><p>Estado de conexión y entorno de la aplicación.</p></div></div><div class="panel"><div class="panel-head"><h2>Conexión con el backend</h2><span class="pill" id="settings-state">Comprobando</span></div><p class="panel-sub">Servicio: Flask / Python · Persistencia: TiDB Cloud</p><button class="primary" onclick="check()">Verificar conexión</button></div></section>
+    </main>
+  </div>
+</div>
+<script>
+let prospectId=null, conversationId=null;
+const $=id=>document.getElementById(id);
+const pageNames={home:'Inicio',chatpage:'Agente IA',prospects:'Prospectos',diagnostics:'Diagnósticos',proposals:'Propuestas',clients:'Clientes',analytics:'Analítica',catalog:'Catálogo',settings:'Configuración'};
+function showPage(id,button){
+  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+  $('page-'+id).classList.remove('hidden');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  $('breadcrumb').textContent=pageNames[id]||'Inicio';
+  if(id==='home')loadDashboard();
+  if(id==='prospects')loadProspects();
+}
+function goProspects(){showPage('prospects',document.querySelector('[data-page=prospects]'))}
+function addMsg(text,role){
+  const d=document.createElement('div');d.className='msg '+role;d.textContent=text;
+  $('messages').appendChild(d);$('messages').scrollTop=$('messages').scrollHeight;
+}
+async function api(path,opts={}){
+  const r=await fetch(path,{headers:{'Content-Type':'application/json'},...opts});
+  let j={};try{j=await r.json()}catch(e){throw new Error('El servidor devolvió una respuesta no válida')}
+  if(!r.ok||j.ok===false)throw new Error(j.error||'Error de servidor');return j;
+}
+async function check(){
+  try{
+    await api('/api/health');$('dbstate').textContent='Base de datos conectada';$('dbdot').classList.add('ok');
+    const s=$('settings-state');if(s)s.textContent='Conectada';
+  }catch(e){
+    $('dbstate').textContent='Base de datos sin conexión';$('dbdot').classList.remove('ok');
+    const s=$('settings-state');if(s)s.textContent='Sin conexión';
+  }
+}
+async function send(){
+  const input=$('message'),message=input.value.trim();if(!message)return;
+  input.value='';addMsg(message,'user');
+  try{
+    const j=await api('/api/chat',{method:'POST',body:JSON.stringify({message,prospect_id:prospectId,conversation_id:conversationId})});
+    prospectId=j.prospect_id;conversationId=j.conversation_id;addMsg(j.reply,'assistant');
+    loadDashboard();
+  }catch(e){addMsg('No se pudo enviar: '+e.message,'assistant')}
+}
+function table(rows,keys){
+  if(!rows||!rows.length)return '<div class="empty">Todavía no hay registros.</div>';
+  return '<table><thead><tr>'+keys.map(k=>'<th>'+esc(k.replaceAll('_',' '))+'</th>').join('')+'</tr></thead><tbody>'+
+    rows.map(r=>'<tr>'+keys.map(k=>'<td>'+esc(r[k]??'')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function loadDashboard(){
+  try{
+    const j=await api('/api/dashboard');
+    $('mProspects').textContent=j.total_prospects??0;$('mConversations').textContent=j.conversations??0;
+    $('mProposals').textContent=j.proposals??0;$('mWon').textContent=j.won??0;
+    $('recent').innerHTML=table(j.recent_prospects||[],['prospect_id','full_name','business_name','status','created_at']);
+  }catch(e){$('recent').textContent='No se pudo cargar el dashboard: '+e.message}
+}
+async function loadProspects(){
+  try{const j=await api('/api/prospects');$('plist').innerHTML=table(j.prospects||[],['prospect_id','full_name','business_name','email','phone','status'])}
+  catch(e){$('plist').textContent='No se pudieron cargar los prospectos: '+e.message}
+}
+async function createProspect(){
+  const result=$('presult');result.textContent='Guardando…';
+  try{
+    const j=await api('/api/prospects',{method:'POST',body:JSON.stringify({
+      full_name:$('pname').value,email:$('pemail').value,phone:$('pphone').value,
+      business_name:$('pbusiness').value,business_sector:$('psector').value,
+      business_goal:$('pgoal').value,acquisition_channel:'manual'
+    })});
+    result.textContent='Prospecto guardado. ID: '+j.prospect_id;
+    ['pname','pemail','pphone','pbusiness','psector','pgoal'].forEach(id=>$(id).value='');
+    loadProspects();loadDashboard();
+  }catch(e){result.textContent=e.message}
+}
+check();loadDashboard();
+</script>
+</body>
+</html>
